@@ -1,0 +1,29 @@
+import pandas as pd
+from functools import reduce
+
+# Load all Excel files into separate DataFrames
+df1 = pd.read_excel(r'C:\Users\arnav\Desktop\2014.xlsx')
+df2 = pd.read_excel(r'C:\Users\arnav\Desktop\2015.xlsx')
+df3 = pd.read_excel(r'C:\Users\arnav\Desktop\2016.xlsx')
+df4 = pd.read_excel(r'C:\Users\arnav\Desktop\2017.xlsx')
+df5 = pd.read_excel(r'C:\Users\arnav\Desktop\2018.xlsx')
+# Add more DataFrames if you have more files
+
+# List of DataFrames
+dfs = [df1, df2, df3, df4, df5]  # Add more DataFrames to this list as needed
+
+# Extract the 'Stock Name' column from each DataFrame
+stock_names = [df['Stock'] for df in dfs]
+
+# Find common stock names across all DataFrames
+common_stocks = reduce(lambda x, y: pd.Series(list(set(x) & set(y))), stock_names)
+
+# Filter each DataFrame to keep only the common stock names
+filtered_dfs = [df[df['Stock'].isin(common_stocks)] for df in dfs]
+
+# Save or further process the filtered DataFrames
+for i, filtered_df in enumerate(filtered_dfs):
+    filtered_df.to_excel(f'C:/Users/arnav/Desktop/filtered_file{i+1}.xlsx', index=False)
+
+print("Filtered files with common stock names have been saved.")
+filtered_df.to_excel('C:/Users/arnav/Desktop/filtered_file.xlsx', index=False)
